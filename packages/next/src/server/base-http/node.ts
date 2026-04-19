@@ -18,12 +18,17 @@ type Req = IncomingMessage & {
 
 export class NodeNextRequest extends BaseNextRequest<Readable> {
   public headers = this._req.headers
-  public fetchMetrics: FetchMetric[] | undefined = this._req?.fetchMetrics;
+  public fetchMetrics: FetchMetric[] | undefined = this._req?.fetchMetrics
+  public readableBody: Promise<any>;
 
   [NEXT_REQUEST_META]: RequestMeta = this._req[NEXT_REQUEST_META] || {}
 
-  constructor(private _req: Req) {
+  constructor(
+    private _req: Req,
+    body?: Promise<any>
+  ) {
     super(_req.method!.toUpperCase(), _req.url!, _req)
+    this.readableBody = body ?? Promise.resolve('unset in node')
   }
 
   get originalRequest() {
