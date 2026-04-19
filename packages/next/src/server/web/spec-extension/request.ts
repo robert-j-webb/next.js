@@ -18,6 +18,7 @@ export class NextRequest extends Request {
     url: string
     nextUrl: NextURL
   }
+  public readableBody: Promise<any>
 
   constructor(input: URL | RequestInfo, init: RequestInit = {}) {
     const url =
@@ -37,6 +38,7 @@ export class NextRequest extends Request {
 
     if (input instanceof Request) super(input, init)
     else super(url, init)
+    this.readableBody = Promise.resolve('from request.ts')
 
     const nextUrl = new NextURL(url, {
       headers: toNodeOutgoingHttpHeaders(this.headers),

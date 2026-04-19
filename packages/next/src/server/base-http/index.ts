@@ -29,6 +29,7 @@ export abstract class BaseNextRequest<Body = any> {
   protected _cookies: NextApiRequestCookies | undefined
   public abstract headers: IncomingHttpHeaders
   public abstract fetchMetrics: FetchMetric[] | undefined
+  public abstract readableBody: Promise<any>
 
   constructor(
     public method: string,

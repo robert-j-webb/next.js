@@ -697,6 +697,19 @@ export async function handler(
     return null
   }
 
+  function getBody(req1: IncomingMessage) {
+    return new Promise((resolve, reject) => {
+      let body = ''
+
+      req1.on('data', (chunk: any) => {
+        body += chunk.toString()
+      })
+
+      req1.on('end', () => resolve(body))
+      req1.on('error', reject)
+    })
+  }
+
   try {
     const varyHeader = routeModule.getVaryHeader(
       resolvedPathname,
@@ -708,7 +721,7 @@ export async function handler(
       span: Span | undefined,
       context: AppPageRouteHandlerContext
     ) => {
-      const nextReq = new NodeNextRequest(req)
+      const nextReq = new NodeNextRequest(req, getBody(req))
       const nextRes = new NodeNextResponse(res)
 
       return routeModule.render(nextReq, nextRes, context).finally(() => {

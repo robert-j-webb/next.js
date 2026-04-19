@@ -148,16 +148,14 @@ export function headers(): Promise<ReadonlyHeaders> {
             // but since you would never use next dev with production NODE_ENV we use this
             // as a proxy so we can statically exclude this code from production builds.
             return makeUntrackedHeadersWithDevWarnings(
-              workUnitStore.headers,
+              workUnitStore.body as any,
               workStore?.route,
               workUnitStore
             )
           } else if (workUnitStore.asyncApiPromises) {
-            return isInEarlyRenderStage(workUnitStore)
-              ? workUnitStore.asyncApiPromises.earlyHeaders
-              : workUnitStore.asyncApiPromises.headers
+            return workUnitStore.asyncApiPromises.body
           } else {
-            return makeUntrackedHeaders(workUnitStore.headers)
+            return workUnitStore.body
           }
           break
         default:

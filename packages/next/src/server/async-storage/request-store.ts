@@ -196,6 +196,9 @@ function createRequestStoreImpl(
     // lets us avoid requiring an empty string for `search` in the type.
     url: { pathname: url.pathname, search: url.search ?? '' },
     rootParams,
+    get body() {
+      return req.readableBody
+    },
     get headers() {
       if (!cache.headers) {
         // Seal the headers object that'll freeze out any methods that could

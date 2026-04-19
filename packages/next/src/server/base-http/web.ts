@@ -12,6 +12,7 @@ export class WebNextRequest extends BaseNextRequest<ReadableStream | null> {
   public request: Request
   public headers: IncomingHttpHeaders
   public fetchMetrics: FetchMetrics | undefined
+  public readableBody: Promise<any>
 
   constructor(request: NextRequestHint) {
     const url = new URL(request.url)
@@ -23,6 +24,7 @@ export class WebNextRequest extends BaseNextRequest<ReadableStream | null> {
     )
     this.request = request
     this.fetchMetrics = request.fetchMetrics
+    this.readableBody = Promise.resolve('web body')
 
     this.headers = {}
     for (const [name, value] of request.headers.entries()) {

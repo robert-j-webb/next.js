@@ -971,7 +971,8 @@ async function generateStagedDynamicFlightRenderResultWeb(
     stageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
 
   trackStaleTime(
@@ -1130,7 +1131,8 @@ async function generateStagedDynamicFlightRenderResultNode(
     stageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
 
   trackStaleTime(
@@ -1332,7 +1334,8 @@ async function stagedRenderWithoutCachesInDevWeb(
     stageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
 
   const { clientModules } = getClientReferenceManifest()
@@ -1402,7 +1405,8 @@ async function stagedRenderWithoutCachesInDevNode(
     stageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
 
   const { clientModules } = getClientReferenceManifest()
@@ -4609,7 +4613,8 @@ async function renderWithRestartOnCacheMissInDevWeb(
     initialStageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
   requestStore.cacheSignal = cacheSignal
 
@@ -4776,7 +4781,8 @@ async function renderWithRestartOnCacheMissInDevWeb(
     finalStageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
 
   // The initial render already wrote to its debug channel.
@@ -4924,7 +4930,8 @@ async function renderWithRestartOnCacheMissInDevNode(
     initialStageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
   requestStore.cacheSignal = cacheSignal
 
@@ -5086,7 +5093,8 @@ async function renderWithRestartOnCacheMissInDevNode(
     finalStageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
 
   // The initial render already wrote to its debug channel.
@@ -5341,7 +5349,8 @@ function createAsyncApiPromises(
   stagedRendering: StagedRenderingController,
   cookies: RequestStore['cookies'],
   mutableCookies: RequestStore['mutableCookies'],
-  headers: RequestStore['headers']
+  headers: RequestStore['headers'],
+  body: RequestStore['body']
 ): NonNullable<RequestStore['asyncApiPromises']> {
   return {
     // Runtime APIs (for prefetch segments)
@@ -5370,6 +5379,7 @@ function createAsyncApiPromises(
       'headers',
       headers
     ),
+    body: stagedRendering.delayUntilStage(RenderStage.Runtime, 'body', body),
     earlyHeaders: stagedRendering.delayUntilStage(
       RenderStage.EarlyRuntime,
       'headers',
@@ -6428,7 +6438,8 @@ async function renderWithRestartOnCacheMissInValidation(
     initialStageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
   // We don't set `requestStore.controller and requestStore.renderSignal here.
   // Right now, we only abort for sync IO, and in the first render, that's just a restart
@@ -6541,7 +6552,8 @@ async function renderWithRestartOnCacheMissInValidation(
     finalStageController,
     requestStore.cookies,
     requestStore.mutableCookies,
-    requestStore.headers
+    requestStore.headers,
+    requestStore.body
   )
   // Right now, we only abort for sync IO.
   // If sync IO occurs in a place where it's not allowed, then we have to fail validation,
@@ -6894,6 +6906,7 @@ async function validateInstantConfigInBuildWithSample(
         type: 'request',
         phase: 'render',
         implicitTags: outerCtx.implicitTags,
+        body: Promise.resolve('from app render'),
         url: {
           pathname: sampleUrl.pathname,
           search: sampleUrl.search,

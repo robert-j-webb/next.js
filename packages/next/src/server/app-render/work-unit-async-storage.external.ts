@@ -54,6 +54,7 @@ export interface RequestStore extends CommonWorkUnitStore {
   }
 
   readonly headers: ReadonlyHeaders
+  readonly body: Promise<any>
   // This is mutable because we need to reassign it when transitioning from the action phase to the render phase.
   // The cookie object itself is deliberately read only and thus can't be updated.
   cookies: ReadonlyRequestCookies
@@ -101,6 +102,8 @@ export type AsyncApiPromises = {
 
   mutableCookies: Promise<ReadonlyRequestCookies>
   earlyMutableCookies: Promise<ReadonlyRequestCookies>
+
+  body: Promise<any>
 
   headers: Promise<ReadonlyHeaders>
   earlyHeaders: Promise<ReadonlyHeaders>
