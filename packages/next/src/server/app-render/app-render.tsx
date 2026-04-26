@@ -3122,6 +3122,7 @@ export const renderToHTMLOrFlight: AppPageRender = (
       fallbackRouteParams
     )
 
+    // breaking here works
     postponedState = parsePostponedState(
       renderOpts.postponed,
       interpolatedParams,
@@ -3995,6 +3996,7 @@ async function renderToStream(
       // one task before continuing
       await waitAtLeastOneReactRenderTask()
 
+      const isPostReq = req.method === 'POST'
       // MARK: nodeStreams HTML
       if (process.env.__NEXT_USE_NODE_STREAMS) {
         // If provided, the postpone state should be parsed as JSON so it can be
@@ -4016,7 +4018,9 @@ async function renderToStream(
               inlinedDataStream,
               createDocumentClosingStream()
             )
-          } else if (postponedState) {
+          } else if (postponedState && !isPostReq) {
+            console.log('Node streams HTML postponed')
+
             // We assume we have dynamic HTML requiring a resume render to complete
             const { postponed, preludeState } =
               getPostponedFromState(postponedState)
@@ -4155,7 +4159,9 @@ async function renderToStream(
               inlinedDataStream,
               createDocumentClosingStream()
             )
-          } else if (postponedState) {
+          } else if (postponedState && !isPostReq) {
+            console.log('Web streams HTML postponed')
+
             // We assume we have dynamic HTML requiring a resume render to complete
             const { postponed, preludeState } =
               getPostponedFromState(postponedState)
@@ -7833,6 +7839,7 @@ async function prerenderToStream(
         metadata
       )
 
+      // last place I hecked
       if (serverIsDynamic) {
         // Dynamic case
         // We will always need to perform a "resume" render of some kind when this route is accessed
